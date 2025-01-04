@@ -1,0 +1,64 @@
+<div class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <!--
+    Background backdrop, show/hide based on modal state.
+
+    Entering: "ease-out duration-300"
+      From: "opacity-0"
+      To: "opacity-100"
+    Leaving: "ease-in duration-200"
+      From: "opacity-100"
+      To: "opacity-0"
+  -->
+    <div class="mt-2 space-y-2">
+        <button
+            class="inline-flex items-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground mt-2 justify-center text-slate-400 px-4 py-2"
+            (click)="setIsAddingList(true)">Add List</button>
+    </div>
+
+    @if (isAddingList) {
+    <div class="fixed inset-0 z-10 w-screen overflow-y-auto bg-transparent">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <!--
+            Modal panel, show/hide based on modal state.
+
+            Entering: "ease-out duration-300"
+            From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            To: "opacity-100 translate-y-0 sm:scale-100"
+            Leaving: "ease-in duration-200"
+            From: "opacity-100 translate-y-0 sm:scale-100"
+            To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+        -->
+            <div
+                class="relative transform overflow-hidden text-left transition-all sm:my-8 sm:w-full sm:max-w-lg flex h-fit w-72 flex-shrink-0 flex-col rounded-lg bg-slate-800/50">
+                <div class="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                    <div class="flex items-center space-x-2">
+                        <h1 class="text-xl font-semibold text-white">Adding List</h1>
+                    </div>
+                    <form class="mt-2 space-y-2" (submit)="handleAddList()" [formGroup]="listForm">
+                        <input
+                            class="flex h-9 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full bg-slate-800 text-white placeholder:text-slate-400"
+                            type="text" formControlName="title" name="title" placeholder="Enter the list name..." />
+                        <select
+                            class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm bg-white"
+                            type="select" formControlName="type" name="type">
+                            <option class="-mx-1 my-1 h-px bg-muted" value="created">Created</option>
+                            <option class="-mx-1 my-1 h-px bg-muted" value="todo">Todo</option>
+                            <option class="-mx-1 my-1 h-px bg-muted" value="pending">Pending</option>
+                            <option class="-mx-1 my-1 h-px bg-muted" value="done">Done</option>
+                            <option class="-mx-1 my-1 h-px bg-muted" value="expired">Expired</option>
+                        </select>
+                        <div class="flex items-center space-x-2 w-full justify-evenly">
+                            <button
+                                class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 w-48"
+                                type="submit" [disabled]="!listForm.valid">Add List</button>
+                            <button
+                                class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground text-slate-400 w-48 px-4 py-2"
+                                type="button" (click)="handleCancel()">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+</div>

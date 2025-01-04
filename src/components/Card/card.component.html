@@ -1,0 +1,76 @@
+<div class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <!--
+    Background backdrop, show/hide based on modal state.
+
+    Entering: "ease-out duration-300"
+      From: "opacity-0"
+      To: "opacity-100"
+    Leaving: "ease-in duration-200"
+      From: "opacity-100"
+      To: "opacity-0"
+  -->
+
+    <div class="rounded-lg bg-slate-900 ps-3 shadow-sm" (click)="setIsEditingCard(true)">
+        <div class="flex items-center justify-between">
+            <p class="text-sm text-slate-400 py-2">{{title}}</p>
+            <button
+                class="inline-flex items-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-8 w-fit hover:bg-accent hover:text-accent-foreground justify-left text-slate-400 px-4 py-2"
+                (click)="deleteCard($event,id)">🗑️</button>
+        </div>
+        @if (description){
+        <p class="text-sm text-slate-400 py-2">
+            {{description}}
+        </p>
+        }
+    </div>
+
+    @if (isEditingCard) {
+    <div class="fixed inset-0 z-10 w-screen overflow-y-auto bg-transparent">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <!--
+            Modal panel, show/hide based on modal state.
+
+            Entering: "ease-out duration-300"
+            From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            To: "opacity-100 translate-y-0 sm:scale-100"
+            Leaving: "ease-in duration-200"
+            From: "opacity-100 translate-y-0 sm:scale-100"
+            To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+        -->
+            <div
+                class="relative transform overflow-hidden text-left transition-all sm:my-8 sm:w-full sm:max-w-lg flex h-fit w-72 flex-shrink-0 flex-col rounded-lg bg-slate-800/50">
+                <div class="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                    <div class="flex items-center space-x-2">
+                        <h1 class="text-xl font-semibold text-white">Edit Card</h1>
+                    </div>
+                    <form class="mt-2 space-y-2" (submit)="handleSave()" [formGroup]="cardForm">
+                        <input
+                            class="flex h-9 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full bg-slate-800 text-white placeholder:text-slate-400"
+                            type="text" formControlName="title" name="title" placeholder="Enter the Card Title..." />
+                        <input
+                            class="flex h-9 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full bg-slate-800 text-white placeholder:text-slate-400"
+                            type="text" formControlName="description" name="description"
+                            placeholder="Enter the Card description..." />
+                        <select
+                            class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm bg-white"
+                            type="select" formControlName="listId" name="listId">
+                            <option class="-mx-1 my-1 h-px bg-muted" value="all">All</option>
+                            @for (list of ( listQuery.isSuccess() ? listQuery.data(): []); track list.id) {
+                            <option class="-mx-1 my-1 h-px bg-muted" value="{{list.id}}">{{list.title}}</option>
+                            }
+                        </select>
+                        <div class="flex items-center space-x-2 w-full justify-evenly">
+                            <button
+                                class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 w-48"
+                                type="submit" [disabled]="!cardForm.valid">Save Card</button>
+                            <button
+                                class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground text-slate-400 w-48 px-4 py-2"
+                                type="button" (click)="handleCancel()">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+</div>

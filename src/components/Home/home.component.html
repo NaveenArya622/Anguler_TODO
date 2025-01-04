@@ -1,0 +1,18 @@
+<div class="min-h-screen bg-slate-900">
+    <header class="border-b bg-slate-900 px-4 py-3">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <h1 class="text-xl font-semibold text-white">My TODO</h1>
+            </div>
+        </div>
+    </header>
+    <main class="p-4">
+        <div class="flex space-x-4 overflow-x-auto pb-4">
+            <app-user title="All" listId="" />
+            @for (list of ( listQuery.isSuccess() ? listQuery.data(): []); track list.id) {
+            <app-user title="{{list.title}}" listId="{{list.id}}" />
+            }
+            <app-input />
+        </div>
+    </main>
+</div>
