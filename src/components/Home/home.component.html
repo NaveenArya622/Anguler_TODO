@@ -7,7 +7,7 @@
         </div>
     </header>
     <main class="p-4">
-        <div class="flex space-x-4 overflow-x-auto pb-4">
+        <div class="flex space-x-0 space-y-4 flex-col sm:space-y-0 sm:space-x-4 sm:flex-row overflow-x-auto pb-4">
             <app-user title="All" listId="" />
             @for (list of ( listQuery.isSuccess() ? listQuery.data(): []); track list.id) {
             <app-user title="{{list.title}}" listId="{{list.id}}" />
