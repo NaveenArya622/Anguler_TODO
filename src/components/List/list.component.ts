@@ -27,6 +27,7 @@ export class ListComponents {
     @Output() deleteListEvent = new EventEmitter<string>();
     @Input() title = "";
     @Input() listId = "";
+    @Input() listType = "";
     newTitle = "";
     isAddingCard = false;
     cardsQuery = injectQuery(() => ({
@@ -138,7 +139,7 @@ export class ListComponents {
     }))
 
     deleteList() {
-        this.deleteListEvent.emit(this.listId);
+        this.deleteListMutation.mutate(this.listId);
     }
 
     handleAddCard() {
