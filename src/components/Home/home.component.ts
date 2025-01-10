@@ -11,6 +11,12 @@ interface ListType {
   type: "created" | "todo" | "pending" | "done" | "expired"
 }
 
+
+interface currentCardIdsType {
+  cardId: string
+  listId: string
+}
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-home',
@@ -20,6 +26,8 @@ interface ListType {
 })
 export class HomeComponents {
   constructor(private List: list) { }
+  currentCardId = ""
+  currentListId = ""
   listQuery = injectQuery(() => ({
     queryKey: ['listData'],
     queryFn: async () => {
@@ -32,4 +40,9 @@ export class HomeComponents {
     },
     select: (lists: ListType[]) => lists,
   }))
+
+  updateCurrentCardId({ cardId, listId }: currentCardIdsType) {
+    this.currentCardId = cardId
+    this.currentListId = listId
+  }
 }

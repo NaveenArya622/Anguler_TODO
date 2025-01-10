@@ -12,6 +12,11 @@ interface CardType {
     description?: string
 }
 
+interface currentCardIdsType {
+    cardId: string
+    listId: string
+}
+
 @Component({
     selector: 'app-user',
     templateUrl: './list.component.html',
@@ -24,10 +29,12 @@ export class ListComponents {
         private List: list
     ) { }
     queryClient = injectQueryClient()
-    @Output() deleteListEvent = new EventEmitter<string>();
+    @Output() updateCurrentCardIdEvent = new EventEmitter<currentCardIdsType>();
     @Input() title = "";
     @Input() listId = "";
     @Input() listType = "";
+    @Input() dropCardId = "";
+    @Input() dropCardListId = "";
     newTitle = "";
     isAddingCard = false;
     cardsQuery = injectQuery(() => ({
@@ -138,9 +145,11 @@ export class ListComponents {
         },
     }))
 
+
     deleteList() {
         this.deleteListMutation.mutate(this.listId);
     }
+
 
     handleAddCard() {
         const card: CardType = {
@@ -150,5 +159,60 @@ export class ListComponents {
             description: "",
         }
         this.addCardMutation.mutate(card)
+    }
+
+    updateCardListIdMutation = injectMutation(() => ({
+        mutationFn: async ({ cardId, listId }: currentCardIdsType) => {
+            try {
+                const messageToUser = await this.Cards.updateCardListId(cardId, listId)
+                return new Response(
+                    JSON.stringify({
+                        status: 200,
+                        message: "Card updated successfully",
+                        messageToUser,
+                        listId: listId
+                    }),
+                    {
+                        status: 200,
+                        headers: { "Content-Type": "application/json" }
+                    }
+                )
+            } catch (error) {
+                return new Response(
+                    JSON.stringify({
+                        status: 500,
+                        message: "Card not updated.",
+                        body: { error: error },
+                    }),
+                    {
+                        status: 500,
+                        headers: { "Content-Type": "application/json" },
+                    }
+                );
+            }
+        },
+        onSuccess: (_, { listId }) => {
+            this.queryClient.invalidateQueries({ queryKey: [this.listId] })
+            this.queryClient.invalidateQueries({ queryKey: ["All"] })
+            this.queryClient.invalidateQueries({ queryKey: [this.dropCardListId] })
+        },
+        onError: (error: Error) => {
+            console.error(error?.message)
+        },
+    }))
+
+
+    updateCurrentCardId(cardIds: currentCardIdsType) {
+        this.updateCurrentCardIdEvent.emit(cardIds)
+    }
+    async enter() {
+        const newDropCardIds: currentCardIdsType = {
+            cardId: this.dropCardId,
+            listId: this.listId
+        }
+        if (this.listId !== "" && this.listId !== this.dropCardListId) {
+            this.updateCardListIdMutation.mutate(newDropCardIds)
+        }
+        // this.updateCurrentCardIdEvent.emit({ cardId: "", listId: "" })
     }
 }

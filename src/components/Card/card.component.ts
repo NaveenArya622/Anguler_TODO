@@ -17,6 +17,11 @@ interface ListType {
     type: "created" | "todo" | "pending" | "done" | "expired"
 }
 
+interface currentCardIdsType {
+    cardId: string
+    listId: string
+}
+
 @Component({
     selector: 'app-input',
     templateUrl: './card.component.html',
@@ -29,7 +34,7 @@ export class CardComponents {
         private List: list
     ) { }
     queryClient = injectQueryClient()
-    @Output() deleteCardEvent = new EventEmitter<string>();
+    @Output() updateCurrentCardIdEvent = new EventEmitter<currentCardIdsType>();
     @Input() title = "";
     @Input() listId = "";
     @Input() id = "";
@@ -158,5 +163,13 @@ export class CardComponents {
         };
         this.isEditingCard = false
         this.updateCardMutation.mutate(newCard);
+    }
+
+    handelDrag() {
+        this.updateCurrentCardIdEvent.emit({ cardId: this.id, listId: this.listId })
+    }
+
+    handelLeave() {
+        this.updateCurrentCardIdEvent.emit({ cardId: "", listId: "" })
     }
 }

@@ -10,7 +10,8 @@
       To: "opacity-0"
   -->
 
-    <div class="rounded-lg bg-slate-900 ps-3 shadow-sm" (click)="setIsEditingCard(true)">
+    <div class="rounded-lg bg-slate-900 ps-3 shadow-sm" draggable="true" (dragstart)="handelDrag()"
+        (mouseleave)="handelLeave()" (click)="setIsEditingCard(true)">
         <div class="flex items-center justify-between">
             <p class="text-sm text-slate-400 py-2">{{title}}</p>
             <button
