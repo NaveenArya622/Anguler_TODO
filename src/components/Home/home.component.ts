@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { ListComponents } from '../List/list.component';
 import { InputListComponents } from '../InputList/input.list.component';
-import { injectMutation, injectQuery } from '@tanstack/angular-query-experimental'
+import { injectQuery } from '@tanstack/angular-query-experimental'
 import { list } from '../../utils/localstorage/list';
 
 interface ListType {
@@ -26,8 +25,6 @@ interface currentCardIdsType {
 })
 export class HomeComponents {
   constructor(private List: list) { }
-  currentCardId = ""
-  currentListId = ""
   listQuery = injectQuery(() => ({
     queryKey: ['listData'],
     queryFn: async () => {
@@ -40,9 +37,4 @@ export class HomeComponents {
     },
     select: (lists: ListType[]) => lists,
   }))
-
-  updateCurrentCardId({ cardId, listId }: currentCardIdsType) {
-    this.currentCardId = cardId
-    this.currentListId = listId
-  }
 }

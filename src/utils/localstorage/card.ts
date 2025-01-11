@@ -62,17 +62,6 @@ export class Cards {
         return Promise.resolve("Unable to Updated")
     }
 
-    async updateCardListId(cardId: string, listId: string) {
-        const cards: Card[] = await this.readCards()
-        const values = cards.map((valueCard: Card) => (
-            valueCard.id === cardId ? { ...valueCard, listId } : valueCard
-        ));
-        if (await this.writeCards(values)) {
-            return "Card Updated"
-        }
-        return Promise.resolve("Unable to Updated")
-    }
-
     async DeleteCard(CardId: string) {
         const cards: Card[] = await this.readCards()
         const values: Card[] = cards.filter(({ id }: Card) => (

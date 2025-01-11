@@ -93,14 +93,14 @@
     <div class="flex flex-col space-y-2">
         @for (card of cardsQuery.isSuccess() ? cardsQuery.data(): []; track card.id) {
         <app-input id="{{card.id}}" listId="{{card.listId}}" title="{{card.title}}"
-            description="{{card.description}}" (updateCurrentCardIdEvent)="updateCurrentCardId($event)"/>
+            description="{{card.description}}"/>
         }
     </div>
     } @else{
     <div class="flex flex-col space-y-2">
         @for (card of allCardsQuery.isSuccess() ? allCardsQuery.data(): []; track card.id) {
         <app-input id="{{card.id}}" listId="{{card.listId}}" title="{{card.title}}"
-            description="{{card.description}}" (updateCurrentCardIdEvent)="updateCurrentCardId($event)"/>
+            description="{{card.description}}"/>
         }
     </div>
     }

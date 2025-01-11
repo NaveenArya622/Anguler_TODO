@@ -4,6 +4,7 @@ import { injectMutation, injectQuery, injectQueryClient } from "@tanstack/angula
 import { Cards } from "../../utils/localstorage/card";
 import { CardComponents } from "../Card/card.component";
 import { list } from "../../utils/localstorage/list";
+import { DragCard } from "../../utils/DragStore/drag.card";
 
 interface CardType {
     id: string
@@ -25,20 +26,18 @@ interface currentCardIdsType {
 })
 export class ListComponents {
     constructor(
+        private DragCard: DragCard,
         private Cards: Cards,
         private List: list
     ) { }
     queryClient = injectQueryClient()
-    @Output() updateCurrentCardIdEvent = new EventEmitter<currentCardIdsType>();
     @Input() title = "";
     @Input() listId = "";
     @Input() listType = "";
-    @Input() dropCardId = "";
-    @Input() dropCardListId = "";
     newTitle = "";
     isAddingCard = false;
     cardsQuery = injectQuery(() => ({
-        queryKey: [this.listId ?? "All"],
+        queryKey: [this.listId === "" ? "All" : this.listId],
         queryFn: async () => {
             try {
                 const cards = await this.Cards.getCards(this.listId);
@@ -161,16 +160,16 @@ export class ListComponents {
         this.addCardMutation.mutate(card)
     }
 
-    updateCardListIdMutation = injectMutation(() => ({
-        mutationFn: async ({ cardId, listId }: currentCardIdsType) => {
+    updateCardMutation = injectMutation(() => ({
+        mutationFn: async ({ card }: { card: CardType, prevListId: string }) => {
             try {
-                const messageToUser = await this.Cards.updateCardListId(cardId, listId)
+                const messageToUser = await this.Cards.updateCard(card)
                 return new Response(
                     JSON.stringify({
                         status: 200,
                         message: "Card updated successfully",
                         messageToUser,
-                        listId: listId
+                        listId: card.listId
                     }),
                     {
                         status: 200,
@@ -191,28 +190,19 @@ export class ListComponents {
                 );
             }
         },
-        onSuccess: (_, { listId }) => {
+        onSuccess: (_, { prevListId }) => {
             this.queryClient.invalidateQueries({ queryKey: [this.listId] })
             this.queryClient.invalidateQueries({ queryKey: ["All"] })
-            this.queryClient.invalidateQueries({ queryKey: [this.dropCardListId] })
+            this.queryClient.invalidateQueries({ queryKey: [prevListId] })
         },
         onError: (error: Error) => {
             console.error(error?.message)
         },
     }))
-
-
-    updateCurrentCardId(cardIds: currentCardIdsType) {
-        this.updateCurrentCardIdEvent.emit(cardIds)
-    }
     async enter() {
-        const newDropCardIds: currentCardIdsType = {
-            cardId: this.dropCardId,
-            listId: this.listId
+        const newCard = this.DragCard.getDragCard();
+        if (this.listId !== "" && newCard && this.listId !== newCard?.listId) {
+            this.updateCardMutation.mutate({ card: { ...newCard, listId: this.listId, }, prevListId: newCard.listId })
         }
-        if (this.listId !== "" && this.listId !== this.dropCardListId) {
-            this.updateCardListIdMutation.mutate(newDropCardIds)
-        }
-        // this.updateCurrentCardIdEvent.emit({ cardId: "", listId: "" })
     }
 }

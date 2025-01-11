@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core"
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms"
-import { injectMutation, injectQuery, injectQueryClient, QueriesObserver } from "@tanstack/angular-query-experimental";
+import { injectMutation, injectQuery, injectQueryClient } from "@tanstack/angular-query-experimental";
 import { list } from "../../utils/localstorage/list";
 import { Cards } from "../../utils/localstorage/card";
+import { DragCard } from "../../utils/DragStore/drag.card";
 
 interface CardType {
     id: string
@@ -30,11 +31,11 @@ interface currentCardIdsType {
 })
 export class CardComponents {
     constructor(
+        private DragCard: DragCard,
         private Cards: Cards,
         private List: list
     ) { }
     queryClient = injectQueryClient()
-    @Output() updateCurrentCardIdEvent = new EventEmitter<currentCardIdsType>();
     @Input() title = "";
     @Input() listId = "";
     @Input() id = "";
@@ -166,10 +167,19 @@ export class CardComponents {
     }
 
     handelDrag() {
-        this.updateCurrentCardIdEvent.emit({ cardId: this.id, listId: this.listId })
+        const cardValue: CardType = {
+            id: this.id,
+            title: this.title,
+            listId: this.listId,
+            description: this.description
+        };
+        this.DragCard.setDragCard(cardValue);
+        console.log()
     }
 
     handelLeave() {
-        this.updateCurrentCardIdEvent.emit({ cardId: "", listId: "" })
+        setTimeout(() => {
+            this.DragCard.setDragCard()
+        }, 1)
     }
 }
