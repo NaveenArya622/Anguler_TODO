@@ -1,4 +1,4 @@
-<div class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+<div class="relative" aria-labelledby="modal-title" role="dialog" aria-modal="true">
     <!--
     Background backdrop, show/hide based on modal state.
 
@@ -26,7 +26,7 @@
             </button>
         </div>
         @if (description){
-        <p class="text-sm text-slate-400 py-2">
+        <p class="text-sm text-slate-400 py-2 whitespace-pre-wrap">
             {{description}}
         </p>
         }
@@ -55,10 +55,11 @@
                         <input
                             class="flex h-9 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full bg-slate-800 text-white placeholder:text-slate-400"
                             type="text" formControlName="title" name="title" placeholder="Enter the Card Title..." />
-                        <input
-                            class="flex h-9 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full bg-slate-800 text-white placeholder:text-slate-400"
+                        <textarea
+                            class="flex min-h-9 max-h-36 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full bg-slate-800 text-white placeholder:text-slate-400"
                             type="text" formControlName="description" name="description"
-                            placeholder="Enter the Card description..." />
+                            placeholder="Enter the Card description..." >
+                        </textarea>
                         <select
                             class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm bg-white"
                             type="select" formControlName="listId" name="listId">
