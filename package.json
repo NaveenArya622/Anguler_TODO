@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:my-first-angular-app": "node dist/my-first-angular-app/server/server.mjs"
+    "build:ssr": "ng build --configuration=production && ng run your-project-name:server:production",
+    "serve:ssr": "node dist/server/main.js"
   },
   "private": true,
   "dependencies": {
